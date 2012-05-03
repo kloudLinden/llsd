@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class LLSDUnitTest < Test::Unit::TestCase
+class LLSDXMLUnitTest < Test::Unit::TestCase
   def test_map
     map_xml = <<EOF
     <llsd>
@@ -33,9 +33,9 @@ EOF
     ruby_map_within_map = {'doo' => {'goo' => 'poo'}}
     ruby_blank_map = {}
 
-    assert_equal ruby_map, LLSD.parse(map_xml)
-    assert_equal ruby_map_within_map, LLSD.parse(map_within_map_xml)
-    assert_equal ruby_blank_map, LLSD.parse(blank_map_xml)
+    assert_equal ruby_map, parse(map_xml)
+    assert_equal ruby_map_within_map, parse(map_within_map_xml)
+    assert_equal ruby_blank_map, parse(blank_map_xml)
 
     assert_equal strip(map_xml), LLSD.to_xml(ruby_map)
     assert_equal strip(map_within_map_xml), LLSD.to_xml(ruby_map_within_map)
@@ -74,9 +74,9 @@ EOF
     ruby_array_within_array = ['foo', 'bar', ['foo', 'bar']]
     ruby_blank_array = []
 
-    assert_equal ruby_array, LLSD.parse(array_xml)
-    assert_equal ruby_array_within_array, LLSD.parse(array_within_array_xml)
-    assert_equal ruby_blank_array, LLSD.parse(blank_array_xml)
+    assert_equal ruby_array, parse(array_xml)
+    assert_equal ruby_array_within_array, parse(array_within_array_xml)
+    assert_equal ruby_blank_array, parse(blank_array_xml)
 
     assert_equal strip(array_xml), LLSD.to_xml(ruby_array)
     assert_equal strip(array_within_array_xml), LLSD.to_xml(ruby_array_within_array)
@@ -95,8 +95,8 @@ EOF
     </llsd>
 EOF
 
-    assert_equal 'foo', LLSD.parse(normal_xml)
-    assert_equal '', LLSD.parse(blank_xml)
+    assert_equal 'foo', parse(normal_xml)
+    assert_equal '', parse(blank_xml)
 
     assert_equal strip(normal_xml), LLSD.to_xml('foo')
     assert_equal strip(blank_xml), LLSD.to_xml('')
@@ -124,9 +124,9 @@ EOF
     ruby_pos_int = 289343
     ruby_neg_int = -289343
 
-    assert_equal ruby_pos_int, LLSD.parse(pos_int_xml)
-    assert_equal ruby_neg_int, LLSD.parse(neg_int_xml)
-    assert_equal 0, LLSD.parse(blank_int_xml)
+    assert_equal ruby_pos_int, parse(pos_int_xml)
+    assert_equal ruby_neg_int, parse(neg_int_xml)
+    assert_equal 0, parse(blank_int_xml)
 
     assert_equal strip(pos_int_xml), LLSD.to_xml(ruby_pos_int)
     assert_equal strip(neg_int_xml), LLSD.to_xml(ruby_neg_int)
@@ -153,9 +153,9 @@ EOF
     ruby_pos_real = 2983287453.38483
     ruby_neg_real = -2983287453.38483
 
-    assert_equal ruby_pos_real, LLSD.parse(pos_real_xml)
-    assert_equal ruby_neg_real, LLSD.parse(neg_real_xml)
-    assert_equal 0, LLSD.parse(blank_real_xml)
+    assert_equal ruby_pos_real, parse(pos_real_xml)
+    assert_equal ruby_neg_real, parse(neg_real_xml)
+    assert_equal 0, parse(blank_real_xml)
 
     assert_equal strip(pos_real_xml), LLSD.to_xml(ruby_pos_real)
     assert_equal strip(neg_real_xml), LLSD.to_xml(ruby_neg_real)
@@ -180,9 +180,9 @@ EOF
     </llsd>
 EOF
 
-    assert_equal true, LLSD.parse(true_xml)
-    assert_equal false, LLSD.parse(false_xml)
-    assert_equal false, LLSD.parse(blank_xml)
+    assert_equal true, parse(true_xml)
+    assert_equal false, parse(false_xml)
+    assert_equal false, parse(blank_xml)
 
     assert_equal strip(true_xml), LLSD.to_xml(true)
     assert_equal strip(false_xml), LLSD.to_xml(false)
@@ -204,8 +204,8 @@ EOF
     ruby_valid_date = DateTime.strptime('2006-02-01T14:29:53Z')
     ruby_blank_date = DateTime.strptime('1970-01-01T00:00:00Z')
 
-    assert_equal ruby_valid_date, LLSD.parse(valid_date_xml)
-    assert_equal ruby_blank_date, LLSD.parse(blank_date_xml)
+    assert_equal ruby_valid_date, parse(valid_date_xml)
+    assert_equal ruby_blank_date, parse(blank_date_xml)
 
     assert_equal strip(valid_date_xml), LLSD.to_xml(ruby_valid_date)
   end
@@ -221,7 +221,7 @@ EOF
 
     # <binary/> should return blank binary blob... in ruby I guess this is just nil
 
-    assert_equal 'dGhlIHF1aWNrIGJyb3duIGZveA==', LLSD.parse(base64_binary_xml)
+    assert_equal 'dGhlIHF1aWNrIGJyb3duIGZveA==', parse(base64_binary_xml)
   end
 
   def test_uuid
@@ -237,8 +237,8 @@ EOF
     </llsd>
 EOF
 
-    assert_equal 'd7f4aeca-88f1-42a1-b385-b9db18abb255', LLSD.parse(valid_uuid_xml)
-    assert_equal '00000000-0000-0000-0000-000000000000', LLSD.parse(blank_uuid_xml)
+    assert_equal 'd7f4aeca-88f1-42a1-b385-b9db18abb255', parse(valid_uuid_xml)
+    assert_equal '00000000-0000-0000-0000-000000000000', parse(blank_uuid_xml)
   end
 
   def test_uri
@@ -255,8 +255,8 @@ EOF
 EOF
 
     # <uri/> should return an empty link, which in ruby I guess is just nil
-    assert_equal 'http://www.example.com:4201/agents', LLSD.parse(valid_uri_xml)
-    assert_equal nil, LLSD.parse(blank_uri_xml)
+    assert_equal 'http://www.example.com:4201/agents', parse(valid_uri_xml)
+    assert_equal nil, parse(blank_uri_xml)
   end
 
   def test_undefined
@@ -266,7 +266,7 @@ EOF
     </llsd>
 EOF
 
-    assert_equal nil, LLSD.parse(undef_xml)
+    assert_equal nil, parse(undef_xml)
     assert_equal strip(undef_xml), LLSD.to_xml(nil)
   end
 
