@@ -3,31 +3,15 @@ require 'test_helper'
 class LLSDNotationUnitTest2 < Test::Unit::TestCase
   def test_map
     multi_data_explode = <<EOF
-[
-i5,
-{
-'asd':"asdstr",
-'test':[
-i4,
-r4.0
-]
-},
-"astring"
-]
+[i5,{'asd':"asdstr",'test':[i4,r4.0]},"astring"]
 EOF
 
     ruby_map_exploded = <<EOF
-{
-'foo':"bar"
-}
+{'foo':"bar"}
 EOF
 
     ruby_map_within_map_exploded = <<EOF
-{
-'doo':{
-'goo':"poo"
-}
-}
+{'doo':{'goo':"poo"}}
 EOF
 
     ruby_map = {:foo => 'bar'}
@@ -42,21 +26,11 @@ EOF
 
   def test_array
     ruby_array_exploded = <<EOF
-[
-"foo",
-"bar"
-]
+["foo","bar"]
 EOF
 
     ruby_array_within_array_exploded = <<EOF
-[
-"foo",
-"bar",
-[
-"foo",
-"bar"
-]
-]
+["foo","bar",["foo","bar"]]
 EOF
 
     blank_array_xml = <<EOF
@@ -106,6 +80,10 @@ EOF
     assert_equal "d\"#{ruby_valid_date.strftime('%Y-%m-%dT%H:%M:%SZ')}\"", LLSD.to_notation(ruby_valid_date)
     assert_equal "d\"#{ruby_blank_date.strftime('%Y-%m-%dT%H:%M:%SZ')}\"", LLSD.to_notation(ruby_blank_date)
 
+  end
+
+  def test_nil
+    assert_equal "!", LLSD.to_notation(nil)
   end
 
   def test_llsd_serialization_exception

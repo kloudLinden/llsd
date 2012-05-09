@@ -35,8 +35,7 @@ class LLSD
   def self.to_notation(obj)
     @object_binary = ""
     notatize_ruby_obj(obj)
-    @object_binary[@object_binary.length-2]='' #remove last comma
-    @object_binary[@object_binary.length-1]='' #remove unwanted new line
+    @object_binary[@object_binary.length-1]='' #remove last comma
     @object_binary
   end
 
@@ -45,28 +44,28 @@ class LLSD
   end
 
   def self.stop
-    append ",\n"
+    append ","
   end
 
   private
   def self.notatize_ruby_obj(obj)
     case obj
     when Hash
-      append "{\n"
+      append "{"
       obj.each do |key, value|
         append "'"
         append key.to_s
         append "':"
         notatize_ruby_obj(value)
       end
-      @object_binary[@object_binary.length-2]='' #remove last comma
+      @object_binary[@object_binary.length-1]='' #remove last comma
       append "}"
       stop
 
     when Array
-      append "[\n"
+      append "["
       obj.each { |o| notatize_ruby_obj(o) }
-      @object_binary[@object_binary.length-2]='' #remove last comma
+      @object_binary[@object_binary.length-1]='' #remove last comma
       append "]"
       stop
 
